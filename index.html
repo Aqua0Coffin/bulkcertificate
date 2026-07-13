@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bulk Certificate Generator</title>
+
+  <!--
+  Google Sans is not publicly distributable via Google Fonts, so per spec
+  we fall back to Inter as the default typeface. Inter, Poppins, Roboto,
+  Open Sans, Montserrat, Lato, Nunito, Playfair Display, Merriweather,
+  Raleway and Oswald are all loaded below for the typography dropdown.
+-->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700;900&family=Open+Sans:wght@300;400;500;600;700;800&family=Montserrat:wght@300;400;500;600;700;800&family=Lato:wght@300;400;700;900&family=Nunito:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800&family=Merriweather:wght@300;400;700;900&family=Raleway:wght@300;400;500;600;700;800&family=Oswald:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="app">
+
+    <!-- ============ Header ============ -->
+    <header class="app-header">
+      <div class="app-header__brand">
+        <span class="app-header__mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="20" height="20">
+            <path d="M12 2 L14.5 8.5 L21 9.3 L16 13.7 L17.5 20.3 L12 16.8 L6.5 20.3 L8 13.7 L3 9.3 L9.5 8.5 Z"
+              fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
+          </svg>
+        </span>
+        <h1 class="app-header__title">Bulk Certificate Generator</h1>
+      </div>
+      <div class="app-header__meta">
+        <span id="headerStatus" class="app-header__status">No template uploaded</span>
+      </div>
+    </header>
+
+    <div class="app-body">
+
+      <!-- ============ Sidebar ============ -->
+      <aside class="sidebar" id="sidebar">
+
+        <!-- 01 — Upload -->
+        <section class="panel" id="panelUpload">
+          <header class="panel__head">
+            <span class="panel__step">01</span>
+            <div>
+              <h2 class="panel__title">Upload certificate</h2>
+              <p class="panel__hint">PNG or JPG, used as the base template.</p>
+            </div>
+          </header>
+
+          <div class="panel__body">
+            <label class="upload-zone" id="uploadZone" for="fileInput">
+              <svg viewBox="0 0 24 24" width="22" height="22" class="upload-zone__icon">
+                <path d="M12 16V4m0 0L7 9m5-5l5 5M5 18v1a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-1" fill="none"
+                  stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span class="upload-zone__text">
+                <strong>Choose an image</strong>
+                <small>or drag a file here</small>
+              </span>
+            </label>
+            <input type="file" id="fileInput" accept="image/png,image/jpeg,image/jpg" hidden>
+            <p class="upload-zone__filename" id="uploadFilename" hidden></p>
+          </div>
+        </section>
+
+        <!-- 02 — Typography -->
+        <section class="panel" id="panelTypography">
+          <header class="panel__head">
+            <span class="panel__step">02</span>
+            <div>
+              <h2 class="panel__title">Typography</h2>
+              <p class="panel__hint">Styling applied to the participant name.</p>
+            </div>
+          </header>
+
+          <div class="panel__body">
+
+            <div class="field">
+              <label class="field__label" for="fontFamily">Font family</label>
+              <select id="fontFamily" class="field__select"></select>
+              <div class="local-font-row">
+                <label class="local-font-btn" for="localFontInput" id="localFontLabel">
+                  <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8 10V3m0 0L5 6m3-3 3 3M2 13h12" />
+                  </svg>
+                  Load from computer…
+                </label>
+                <input type="file" id="localFontInput" accept=".ttf,.otf,.woff,.woff2" hidden>
+                <span class="local-font-chip" id="localFontChip" hidden></span>
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label class="field__label" for="fontSize">Size <span id="fontSizeValue"
+                    class="field__value">64px</span></label>
+                <input type="range" id="fontSize" min="12" max="220" value="64" step="1">
+              </div>
+              <div class="field">
+                <label class="field__label" for="fontWeight">Weight</label>
+                <select id="fontWeight" class="field__select">
+                  <option value="300">Light</option>
+                  <option value="400">Regular</option>
+                  <option value="500" selected>Medium</option>
+                  <option value="600">Semibold</option>
+                  <option value="700">Bold</option>
+                  <option value="800">Extrabold</option>
+                </select>
+              </div>
+            </div>
+
+
+            <div class="field">
+              <label class="field__label" for="fontColor">Color</label>
+              <div class="color-field">
+                <input type="color" id="fontColor" value="#1f2421">
+                <input type="text" id="fontColorHex" class="field__text" value="#1F2421" maxlength="7">
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="opacity">Opacity <span id="opacityValue"
+                  class="field__value">100%</span></label>
+              <input type="range" id="opacity" min="10" max="100" value="100" step="1">
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="letterSpacing">Letter spacing <span id="letterSpacingValue"
+                  class="field__value">0px</span></label>
+              <input type="range" id="letterSpacing" min="-4" max="40" value="0" step="1">
+            </div>
+
+          </div>
+        </section>
+
+        <!-- 03 — Alignment -->
+        <section class="panel" id="panelAlignment">
+          <header class="panel__head">
+            <span class="panel__step">03</span>
+            <div>
+              <h2 class="panel__title">Alignment</h2>
+              <p class="panel__hint">How the name grows from its anchor point.</p>
+            </div>
+          </header>
+
+          <div class="panel__body">
+            <div class="align-group" id="alignGroup" role="group" aria-label="Text alignment">
+              <button type="button" class="align-btn" data-align="left" aria-pressed="false" title="Align left">
+                <svg viewBox="0 0 20 20" width="16" height="16">
+                  <path d="M2 4h16M2 9h11M2 14h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                    fill="none" />
+                </svg>
+                Left
+              </button>
+              <button type="button" class="align-btn is-active" data-align="center" aria-pressed="true"
+                title="Align center">
+                <svg viewBox="0 0 20 20" width="16" height="16">
+                  <path d="M2 4h16M5 9h10M2 14h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                    fill="none" />
+                </svg>
+                Center
+              </button>
+              <button type="button" class="align-btn" data-align="right" aria-pressed="false" title="Align right">
+                <svg viewBox="0 0 20 20" width="16" height="16">
+                  <path d="M2 4h16M7 9h11M2 14h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                    fill="none" />
+                </svg>
+                Right
+              </button>
+            </div>
+            <button type="button" class="text-btn" id="centerPositionBtn">Reset position to center</button>
+          </div>
+        </section>
+
+        <!-- 04 — Names -->
+        <section class="panel" id="panelNames">
+          <header class="panel__head">
+            <span class="panel__step">04</span>
+            <div>
+              <h2 class="panel__title">Participant names</h2>
+              <p class="panel__hint">One name per line. Blank lines are ignored.</p>
+            </div>
+          </header>
+
+          <div class="panel__body">
+
+            <div class="field">
+              <label class="field__label" id="casingLabel">Name casing</label>
+              <div class="casing-group" id="casingGroup" role="group" aria-label="Name casing"
+                aria-labelledby="casingLabel">
+                <button type="button" class="casing-btn is-active" data-case="as-entered" aria-pressed="true"
+                  title="Keep names exactly as typed">As&nbsp;entered</button>
+                <button type="button" class="casing-btn" data-case="title" aria-pressed="false"
+                  title="Capitalize first letter of every word">Title</button>
+                <button type="button" class="casing-btn" data-case="upper" aria-pressed="false"
+                  title="Convert to ALL CAPS">UPPER</button>
+                <button type="button" class="casing-btn" data-case="lower" aria-pressed="false"
+                  title="Convert to all lowercase">lower</button>
+              </div>
+            </div>
+
+            <textarea id="namesInput" class="names-textarea" rows="7"
+              placeholder="John Doe&#10;Jane Smith&#10;Michael Johnson&#10;Emily Davis"></textarea>
+            <p class="names-count"><strong id="namesCount">0</strong> valid names entered</p>
+          </div>
+        </section>
+
+        <!-- 05 — Generate -->
+        <section class="panel" id="panelGenerate">
+          <header class="panel__head">
+            <span class="panel__step">05</span>
+            <div>
+              <h2 class="panel__title">Generate &amp; download</h2>
+              <p class="panel__hint">Renders one PNG per name, at full resolution.</p>
+            </div>
+          </header>
+
+          <div class="panel__body">
+            <button type="button" class="btn btn--primary btn--block" id="generateBtn" disabled>
+              Generate certificates
+            </button>
+
+            <div class="progress" id="progressWrap" hidden>
+              <div class="progress__track">
+                <div class="progress__fill" id="progressFill"></div>
+              </div>
+              <p class="progress__label" id="progressLabel">Rendering 0 / 0</p>
+            </div>
+
+            <div class="download-row" id="downloadRow" hidden>
+              <button type="button" class="btn btn--secondary" id="downloadIndividualBtn">Download individually</button>
+              <button type="button" class="btn btn--secondary" id="downloadZipBtn">Download ZIP</button>
+            </div>
+          </div>
+        </section>
+
+      </aside>
+
+      <!-- ============ Stage / Preview ============ -->
+      <main class="stage">
+
+        <div class="stage-toolbar">
+          <div class="stage-toolbar__group">
+            <span class="stage-toolbar__label">Zoom</span>
+            <div class="zoom-group" id="zoomGroup" role="group" aria-label="Zoom level">
+              <button type="button" class="zoom-btn" data-zoom="25">25%</button>
+              <button type="button" class="zoom-btn" data-zoom="50">50%</button>
+              <button type="button" class="zoom-btn" data-zoom="75">75%</button>
+              <button type="button" class="zoom-btn is-active" data-zoom="100">100%</button>
+              <button type="button" class="zoom-btn" data-zoom="150">150%</button>
+              <button type="button" class="zoom-btn" data-zoom="200">200%</button>
+            </div>
+          </div>
+          <div class="stage-toolbar__group stage-toolbar__group--coords">
+            <span class="coord-readout" id="coordReadout" hidden>X: 0 Y: 0</span>
+          </div>
+        </div>
+
+        <div class="stage-canvas-wrap" id="stageCanvasWrap">
+
+          <div class="canvas-placeholder" id="canvasPlaceholder">
+            <svg viewBox="0 0 48 48" width="40" height="40">
+              <rect x="6" y="8" width="36" height="32" rx="2" fill="none" stroke="currentColor" stroke-width="1.4" />
+              <circle cx="16" cy="18" r="3" fill="none" stroke="currentColor" stroke-width="1.4" />
+              <path d="M6 32l10-9 8 7 6-5 12 11" fill="none" stroke="currentColor" stroke-width="1.4"
+                stroke-linejoin="round" />
+            </svg>
+            <p>Upload a certificate template to begin</p>
+          </div>
+
+          <div class="canvas-stack" id="canvasStack" hidden>
+            <canvas id="previewCanvas"></canvas>
+            <canvas id="overlayCanvas"></canvas>
+          </div>
+
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+
+  <!-- Libraries: JSZip for packaging exports, FileSaver for triggering downloads -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
